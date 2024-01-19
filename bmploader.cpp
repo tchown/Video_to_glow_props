@@ -16,7 +16,7 @@ int bmploader(void)
 	switch (Info.BitDepth) {
         case 24:
             
-            cout<<"loading 24 bit bitmap \n";
+            cout<<" loading 24 bit bitmap \n";
             if(user_option==1) bmp24loader();
             if(user_option == 2) circularbmp24loader();
             break;

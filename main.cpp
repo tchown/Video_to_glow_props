@@ -73,7 +73,7 @@ int main()
 
 		if (highest_frame < 10) {
 			input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
-    		cout<<input_file_name<<endl;
+    		cout<<input_file_name;
 			bmploader();
 		}
 
@@ -85,7 +85,7 @@ int main()
 			else {
 				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-    		cout<<input_file_name<<endl;
+    		cout<<input_file_name;
 
 			bmploader();
 		}
@@ -101,7 +101,7 @@ int main()
 			else {
 				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-    		cout<<input_file_name<<endl;
+    		cout<<input_file_name;
 
 			bmploader();
 		}
@@ -121,7 +121,7 @@ int main()
 			else {
 				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-    		cout<<input_file_name<<endl;
+    		cout<<input_file_name;
 
 			bmploader();
 		}
