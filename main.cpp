@@ -1,75 +1,107 @@
-#include "headers/bmploader.h"
+#include "headers/bmploader.hpp"
 
+using namespace std;
 
+struct BMPHeader Header;
+struct BMPInfo Info;
+string input_file_name, output_file_name;
+ifstream input_file;
+ofstream output_file;
+int user_option;
+int radius;
+int highest_frame;
+int frame_counter;
+int output_option;
 
-
-
-int main(int argc, char* argv[])
+int main()
 {
-	if (argc != 4) {
-		printf("please enter: input file (which must have no spaces) followed by highest frame number followed by the output opition (1 = rectaular e.g poi, cyr wheel... 2 = cirlular e.g. umbrella, Holographic spinner... 3 = both");
+	string file_name,  frame_as_string;
+	int highest_frame;
+	 cout << "\n\n";
+    cout << "Enter file name (not including the number or .bmp): ";
+    cin>>file_name;
+	if(file_name.length()>7) {
+		cout<<"file name can't be more than 7 charactors, remname the file with a shorter name"<<endl;
 		exit(1);
 	}
 
-	output_option = atoi(argv[3]);
-	if (output_option != 1 && output_option != 2 && output_option != 3) {
-		printf("output option must = 1,2 or 3 (1 = rectaular e.g poi, cyr wheel... 2 = cirlular e.g.umbrella, Holographic spinner... 3 = both");
-			exit(1);
-	}
-
-	highest_frame = atoi(argv[2]);
+	 cout << "\n\n";
+	cout<< "Enter the heighest frame: ";
+	cin>>highest_frame;
 	if (highest_frame >= 10000) {
-		printf("highest frame number is 9999!");
+		cout<<"highest frame number is 9999!";
 		exit(1);
 	}
-	strcpy_s(bmpname, argv[1]);
-	if(strlen(bmpname)>7){
-		printf("file name can't be more than 7 charactors, remname the file with a shorter name");
-		exit(1);
+
+    cout << "\n\n";
+    cout <<"Enter 1 for rectangluar converter (e.g. poi),"<<endl;    
+    cout <<"Enter 2 for circular converter (e.g. Umberlla),"<<endl;
+   
+    cin >> user_option;
+
+	if(user_option==1) {
+		output_file_name = file_name +".squ";
 	}
-	//strcpy_s(bmpfile, bmpname);
-	snprintf(bmpout, 80, "%s.squ", bmpname); // puts string into buffer
-	snprintf(Cbmpout, 80, "%s.jel", bmpname); // puts string into buffer
-	snprintf(Ctext, 80, "%sC.txt", bmpname); // puts string into buffer
-	snprintf(Ubmpout, 80, "%sU.umb", bmpname); // puts string into buffer
-	snprintf(Utext, 80, "%sU.txt", bmpname); // puts string into buffer
-	snprintf(Hbmpout, 80, "%sH.bin", bmpname); // puts string into buffer
-	snprintf(Htext, 80, "%sH.txt", bmpname); // puts string into buffer
-	snprintf(bmptext, 80, "%s.txt", bmpname); // puts string into buffer
+	else if (user_option==2){
+		cout << "\n\n";
+		cout <<"Enter 1 for JELLY_FISH_V4 (120px radius)"<<endl;
+		cout << "Enter 2 for UMBRELLA_V4 (96px radius)"<<endl;
+		cout << " OR enter the radius you wish to convert for"<<endl;
+		cin >> radius;
+		if (radius == 1){
+			radius=120;
+			output_file_name = file_name+".Jcir";
+		}
+		else if(radius==2){
+			radius =98; // two extra pixels as LEDs don't quite come to the centre
+			output_file_name = file_name+".Ucir";
+		} 
+		else{
+			output_file_name = file_name+".cir";
+
+		}
+	}
+    else{
+        cout<< "error invalied option";
+        return 1;
+    }
 
 
 	for (frame_counter = 0; frame_counter <= highest_frame; frame_counter++) {
-		if (highest_frame < 10) {
-			snprintf(bmpfile, 80, "%s%d.bmp", bmpname, frame_counter); // puts string into buffer
-			printf("%s ", bmpfile);
+		
+		frame_as_string = to_string(frame_counter);
 
+		if (highest_frame < 10) {
+			input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
+    		cout<<input_file_name<<endl;
 			bmploader();
 		}
 
 		else if ((highest_frame < 100)) {
 			if (frame_counter < 10) {
-				snprintf(bmpfile, 80, "%s0%d.bmp", bmpname, frame_counter); // puts string into buffer
+
+				input_file_name = "BMPs/" + file_name + to_string(0)+ frame_as_string +".bmp";
 			}
 			else {
-				snprintf(bmpfile, 80, "%s%d.bmp", bmpname, frame_counter); // puts string into buffer
+				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-			printf("%s ", bmpfile);
+    		cout<<input_file_name<<endl;
 
 			bmploader();
 		}
 
 		else if ((highest_frame < 1000)) {
-			
 			if (frame_counter < 10) {
-				snprintf(bmpfile, 80, "%s00%d.bmp", bmpname, frame_counter); // puts string into buffer
+
+				input_file_name = "BMPs/" + file_name + to_string(0)+ to_string(0)+ frame_as_string +".bmp";
 			}
-			else if (frame_counter < 100) {
-				snprintf(bmpfile, 80, "%s0%d.bmp", bmpname, frame_counter); // puts string into buffer
+			else if(frame_counter<100) {
+				input_file_name = "BMPs/" + file_name +to_string(0)+ frame_as_string +".bmp";
 			}
 			else {
-				snprintf(bmpfile, 80, "%s%d.bmp", bmpname, frame_counter); // puts string into buffer
+				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-			printf("%s ", bmpfile);
+    		cout<<input_file_name<<endl;
 
 			bmploader();
 		}
@@ -77,18 +109,19 @@ int main(int argc, char* argv[])
 		else if ((highest_frame < 10000)) {
 			
 			if (frame_counter < 10) {
-				snprintf(bmpfile, 80, "%s000%d.bmp", bmpname, frame_counter); // puts string into buffer
+
+				input_file_name = "BMPs/" + file_name + to_string(0)+to_string(0)+to_string(0)+ frame_as_string +".bmp";
 			}
-			else if (frame_counter < 100) {
-				snprintf(bmpfile, 80, "%s00%d.bmp", bmpname, frame_counter); // puts string into buffer
+			else if(frame_counter<100) {
+				input_file_name = "BMPs/" + file_name +to_string(0)+to_string(0)+ frame_as_string +".bmp";
 			}
-			else if (frame_counter < 1000) {
-				snprintf(bmpfile, 80, "%s0%d.bmp", bmpname, frame_counter); // puts string into buffer
+			else if(frame_counter<1000) {
+				input_file_name = "BMPs/" + file_name +to_string(0)+ frame_as_string +".bmp";
 			}
 			else {
-				snprintf(bmpfile, 80, "%s%d.bmp", bmpname, frame_counter); // puts string into buffer
+				input_file_name = "BMPs/" + file_name + frame_as_string +".bmp";
 			}
-			printf("%s ", bmpfile);
+    		cout<<input_file_name<<endl;
 
 			bmploader();
 		}
